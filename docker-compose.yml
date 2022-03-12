@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: nginx
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    environment:
+      BASIC_USERNAME: "admin"
+      BASIC_PASSWORD: "admin"
+
