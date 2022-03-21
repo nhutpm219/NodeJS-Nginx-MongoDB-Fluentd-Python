@@ -1,6 +1,6 @@
 # NodeJS-Nginx-MongoDB-Fluentd-Python
-Config files for my GitHub profile.
-versions:
+
+Versions:
 - Docker version 20.10.13, build a224086
 - Docker Compose version v2.2.3
 - Ubuntu 18.04
