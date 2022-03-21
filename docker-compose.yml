@@ -1,15 +1,52 @@
 version: '3.8'
 
 services:
-  frontend:
-    image: nginx
+  web:
     build:
-      context: ./frontend
+      context: ./web
+    links: 
+      - mongo
+    ports:
+      - "3000:3000"
+  auth:
+    build:
+      context: ./auth
     ports:
       - "80:80"
+    links:
+      - web
+      - fluent
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: mongo.access
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
     volumes:
-      - ./frontend:/usr/share/nginx/html
-    environment:
-      BASIC_USERNAME: "admin"
-      BASIC_PASSWORD: "admin"
-
+      - mongodb:/data/db
+  fluentd:
+    build:
+      context: ./fluentd
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    volumes:
+      - ./fluentd:/var/log/fluent
+    links:
+      - mongo
+  schedule_task:
+    build:
+      context: ./scheduled_task
+    depends_on:
+      - web
+      - auth
+      - mongo
+      - fluentd
+    volumes:
+      - ./fluentd/nginx:/var/log
+volumes:
+  mongodb:
