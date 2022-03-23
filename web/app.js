@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var url = "mongodb://test400-mongo-1:27017/nginx";
+var url = "mongodb://mongo:27017/nginx";
 var MongoClient = require('mongodb').MongoClient;
 
 MongoClient.connect(url, function(err, db) {

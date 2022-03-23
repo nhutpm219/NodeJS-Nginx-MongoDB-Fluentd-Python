@@ -4,6 +4,7 @@ services:
   web:
     build:
       context: ./web
+    container_name: web
     links: 
       - mongo
     ports:
@@ -11,11 +12,12 @@ services:
   auth:
     build:
       context: ./auth
+    container_name: auth
     ports:
       - "80:80"
     links:
       - web
-      - fluent
+      - fluentd
     logging:
       driver: "fluentd"
       options:
@@ -23,6 +25,7 @@ services:
         tag: mongo.access
   mongo:
     image: mongo
+    container_name: mongo
     restart: always
     ports:
       - 27017:27017
@@ -31,6 +34,7 @@ services:
   fluentd:
     build:
       context: ./fluentd
+    container_name: fluentd
     ports:
       - "24224:24224"
       - "24224:24224/udp"
@@ -41,6 +45,7 @@ services:
   schedule_task:
     build:
       context: ./scheduled_task
+    container_name: schedule_task
     depends_on:
       - web
       - auth
